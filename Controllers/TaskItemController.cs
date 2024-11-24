@@ -2,12 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using TaskBoardFinalProject.Models;
 using TaskBoardFinalProject.Data;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 //all the routes, logic for getting (reading), (updating) editting, deleting and creating (CRUD)
 
 namespace TaskBoardFinalProject.Controllers
 {
-    [Route("api/[controller]")]
+    //add action to allow all routes 
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class TaskItemController : ControllerBase
     {
@@ -24,30 +26,95 @@ namespace TaskBoardFinalProject.Controllers
         //this will create a task item and we expect that to use the format written in the taskItem file (name id etc)
         //TaskItem is the type, (class is a type)
         [HttpPost]
-        public JsonResult CreateEdit(TaskItem item)
+        public JsonResult Create(TaskItem item)
         {
-            //if no id- we need to create a new item 
-            if (item.Id == 0)
-            {
+            // we need to create a new item 
                 _context.Tasks.Add(item);
-            }
-            else
-            {   //task already exists, so we need to find it 
-                var itemInDb = _context.Tasks.Find(item.Id);
+            
+            
 
-                if (itemInDb == null)
-                {
-                    return new JsonResult(NotFound());          //return 404 
-                }
-
-                //if task exists, update it with data being passed in
-                itemInDb = item;
-            }
-
-            //save updated database 
+            //save updated database after modifying 
             _context.SaveChanges();
 
             return new JsonResult(Ok(item));        //returns 200 status, means works successfully 
+        }
+
+
+
+        [HttpPost]
+        public JsonResult Edit(TaskItem item)
+        {
+            
+             //task already exists, so we need to find it 
+            var itemInDb = _context.Tasks.Find(item.Id);
+
+            if (itemInDb == null)
+            {
+                return new JsonResult(NotFound());          //return 404 
+            }
+
+
+            //if task exists, update it with data being passed in
+
+            itemInDb.Name = item.Name;
+            itemInDb.Description = item.Description;
+            itemInDb.DateDue = item.DateDue;
+            itemInDb.Status = item.Status;
+
+            
+
+            _context.Update(itemInDb);
+
+            //save updated database after modifying 
+            _context.SaveChanges();
+
+            return new JsonResult(Ok(item));        //returns 200 status, means works successfully 
+        }
+
+
+        //creating an endpoint for getting a specific item/ task. GET 1. still within the controller 
+        //get 
+        //ID (integer) as a parameter, use this to find the task by id 
+        [HttpGet]
+        public JsonResult Get(int id)
+        {
+            var result = _context.Tasks.Find(id);
+
+            //if no task within the database has this id, not found status code 404 is returned
+            if (result == null)
+            {
+                return new JsonResult(NotFound());
+            }
+            //if there is a task with that id, return the specific task
+            return new JsonResult(Ok(result));
+        }
+
+        //creating an endpoint for deleting a task by id 
+        [HttpDelete]
+        public JsonResult Delete(int id)
+        {
+            var result = _context.Tasks.Find(id);
+
+            if (result == null)
+            {
+                return new JsonResult(NotFound());
+            }
+
+            //save changes/ updates to database 
+            _context.Tasks.Remove(result);
+            _context.SaveChanges();
+
+            return new JsonResult(NoContent());
+        }
+
+        //getting all tasks from the database 
+        //[HttpGet("/GetAll")] - instead of this, at the top with the controller, to display full route.
+        [HttpGet()]
+        public JsonResult GetAll()
+        {
+            var result = _context.Tasks.ToList();
+
+            return new JsonResult(Ok(result));
         }
     }
 }
