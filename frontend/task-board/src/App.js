@@ -14,18 +14,7 @@ import EditTaskForm from "./EditTaskForm/EditTaskForm";
 export default function App() {
   return (
     <Router>
-      {/* manually put the component you are working on in here to see it working */}
       <div>
-        {/* navigation links*/}
-        <nav>
-          <Link to="/">Home</Link>
-          {/* navigates to new task create form*/}
-          <Link to="/create-task">Create Task</Link>
-
-          {/* navigates to individual task page view, to allow tasks to be edited or deleted*/}
-          {/*<Link to="/individual-task">Individual Task View</Link>*/}
-        </nav>
-
         {/*react routes*/}
         <Routes>
 

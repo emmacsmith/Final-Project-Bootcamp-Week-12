@@ -1,11 +1,15 @@
 import {useEffect, useState} from 'react';
 import Task from '../Task/Task';
+import { useNavigate } from "react-router";
+
 //this is the homepage itself 
 
 export default function HomePage(){
 
     //useState is a react hook to fetch data 
     const [tasks, setTasks] = useState([]);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
 
@@ -70,14 +74,16 @@ export default function HomePage(){
 
     return (
         <>
+
+        {/*<button onClick={() => navigate("/")}> Home</button>*/}
+
+        <button onClick={() => navigate("/create-task")}> Create</button>
         
-
-        {tasks.map(task => <Task name={task.name} description={task.description} id={task.id}/>)}
-
-        <button onClick={() => createTask( 0, "Name", "description", 7, true)} className="Submit">Create</button>
         {/* button to link to what page it needs to go to to allow creation of task*/}
 
-        <button onClick={() => getOneTask( 1 )} className="FindTask">Find Task</button>
+        {/*<button onClick={() => getOneTask( 1 )} className="FindTask">Find Task</button>*/}
+
+        {tasks.map(task => <Task name={task.name} description={task.description} id={task.id} status={task.status}/>)}
 
         </>
         

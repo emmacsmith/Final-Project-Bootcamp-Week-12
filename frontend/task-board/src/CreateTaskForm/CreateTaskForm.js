@@ -7,17 +7,26 @@
 //create and edit call
 
 import {useEffect, useState} from 'react';
+import { useNavigate } from "react-router";
 
 export default function CreateTaskForm(){
 
+    const navigate = useNavigate();
+
     //state for form inputs 
-    const [task, setTask] = useState({
-        id: 0, 
-        name:"",
-        description:"",
-        dateDue:"",
-        state:false,
-    })
+    // const [task, setTask] = useState({
+    //     id: 0, 
+    //     name:"",
+    //     description:"",
+    //     dateDue:"",
+    //     state:false,
+    // })
+
+        let [name, setName] = useState("");
+        let [description, setDescription] = useState("");
+        let [dateDue, setDateDue] = useState("");
+        let [status, setStatus] = useState(false);
+    
 
     //state to recieve user inputs 
     const [message, setMessage] = useState("")
@@ -26,13 +35,21 @@ export default function CreateTaskForm(){
     //prevents page from refreshing 
     const handleFormSubmission = async (event) => {
         event.preventDefault();
-        await createTask();
+        let newTask = {
+            name: name, 
+            description: description, 
+            dateDue: dateDue,
+            status: status,
+        }
+        console.log(newTask)
+        await createTask(newTask);
         //then navigate to home page
+
     }
 
     //function to create a new task
     //submit the form to create a new task
-    const createTask = async() => {
+    const createTask = async(task) => {
         let response = await fetch ("https://localhost:7152/api/TaskItem/Create", {
             method: "POST",
             headers: {
@@ -42,26 +59,32 @@ export default function CreateTaskForm(){
         })
 
         let newTask = await response.json();
+        window.alert("Task successfully created!")
         setMessage("New Task Added")
         console.log("New Task: ", newTask)
     
 
         //reset the form after successful creation to allow new task to be created 
-        setTask({
-            id: 0, 
-            name:"", 
-            description:"", 
-            dateDue:"",
-            status: false,
-        })
+        // setTask({
+        //     id: 0, 
+        //     name:"", 
+        //     description:"", 
+        //     dateDue:"",
+        //     status: false,
+        // })
     }
+
+
 
 
     return (
         <>
+
+        <button onClick={() => navigate("/")}> Home</button>
+
         <div className = "container mt-4"></div>
             <h2>Create New Task</h2>
-            <div class="alert alert-info">Task successfully created</div>
+            {/*<div class="alert alert-info">Task successfully created</div>*/}
         <form onSubmit={handleFormSubmission}>
 
 
@@ -71,8 +94,8 @@ export default function CreateTaskForm(){
                     Task Name:
                     <input
                         type= "text"
-                        value = {task.name}
-                        onchange= {(e) => setTask({...task, name: e.target.value})}
+                        // value={name}
+                        onChange= {(e) => setName(e.target.value)}
                         style= {{ display: "block", width: "100%", padding: "8px" }}
                         required
                     />
@@ -85,8 +108,8 @@ export default function CreateTaskForm(){
                     Description:
                     {/* use textarea for longer userinputs, supports scolling, for multiline use*/}
                     <textarea
-                        value = {task.description}
-                        onchange= {(e) => setTask({...task, description: e.target.value})}
+                        // value = {description}
+                        onChange= {(e) => setDescription(e.target.value)}
                         style= {{ display: "block", width: "100%", padding: "8px" }}
                         required
                     />
@@ -100,8 +123,8 @@ export default function CreateTaskForm(){
                     Due Date:
                     <input
                         type= "date"
-                        value = {task.dateDue}
-                        onchange= {(e) => setTask({...task, dateDue: e.target.value})}
+                        // value = {dateDue}
+                        onChange= {(e) => setDateDue(e.target.value)}
                         style= {{ display: "block", width: "100%", padding: "8px" }}
                         required
                     />
@@ -114,10 +137,10 @@ export default function CreateTaskForm(){
                     Task Completion Status:
                     <input
                         type= "checkbox"
-                        checked = {task.status}
-                        onchange= {(e) => setTask({...task, status: e.target.value})}
+                        // checked = {status}
+                        onChange= {(e) => setStatus(e.target.checked)}
                         style= {{ marginLeft: "10px" }}
-                        required
+                        // required
                     />
                 </label>
             </div>

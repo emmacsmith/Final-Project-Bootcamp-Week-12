@@ -8,12 +8,32 @@
 
 import {useEffect, useState} from 'react';
 import { useParams } from "react-router";
+import { useNavigate } from "react-router";
 
 
 export default function EditTaskForm(){
+        
+        //state for form inputs 
+        // const [task, setTask] = useState({
+        //     name:"",
+        //     description:"",
+        //     dateDue:"",
+        //     state:false,
+        // })
 
     //takes the specific id from the url 
-    const {id} = useParams();
+    const {id} = useParams(); //get the tasks id
+
+    const navigate = useNavigate();
+    
+    //state for form inputs
+    let [name, setName] = useState("");
+    let [description, setDescription] = useState("");
+    let [dateDue, setDateDue] = useState("");
+    let [status, setStatus] = useState(false);
+
+    //state to recieve user inputs 
+    const [message, setMessage] = useState("")
 
     useEffect(() => {
 
@@ -22,67 +42,78 @@ export default function EditTaskForm(){
         const getOneTask = async () => {
            let response = await fetch("https://localhost:7152/api/TaskItem/Get?id=" + id);
            let oneTask = await response.json();
+
+           //console.log(JSON.stringify(oneTask));
            
-           setTask(oneTask);
+           setName(oneTask.value.name);
+           setDescription(oneTask.value.description);
+           setDateDue(oneTask.value.dateDue);
+           setStatus(oneTask.value.status);
            
        }
 
        getOneTask();
        
-   }, [])
+   }, [id])
 
-    //state for form inputs 
-    const [task, setTask] = useState({
-        id: 0, 
-        name:"",
-        description:"",
-        dateDue:"",
-        state:false,
-    })
 
-    //state to recieve user inputs 
-    const [message, setMessage] = useState("")
+    //handle form input changes 
+    //const handleInputChange = (e)  => {
+    //    const {name, description, dateDue, status} = e.target
+    //    setTask((prevTask) => ({
+    //        ...prevTask, 
+            
+    //    }))
+    //}
+    
+
+
 
     //function to handle form submission 
     //prevents page from refreshing 
     const handleFormSubmission = async (event) => {
         event.preventDefault();
-        await createTask();
+        let editTask = {
+            id,
+            name, 
+            description, 
+            dateDue,
+            status,
+        }
+        console.log(editTask);
+        await createTask(editTask);
         //then navigate to home page
     }
 
     //function to create a new task
     //submit the form to create a new task
-    const createTask = async() => {
-        let response = await fetch ("https://localhost:7152/api/TaskItem/Create", {
+    const createTask = async(editTask) => {
+        let response = await fetch ("https://localhost:7152/api/TaskItem/Edit", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(task),
-        })
+            body: JSON.stringify(editTask),
+        });
 
-        let newTask = await response.json();
-        setMessage("New Task Added")
-        console.log("New Task: ", newTask)
+        let updatedTask = await response.json();
+        window.alert("successful Edit!")
+        setMessage("Task Updated successfully")
+        console.log("Updated Task: ", updatedTask)
     
-
-        //reset the form after successful creation to allow new task to be created 
-        setTask({
-            id: 0, 
-            name:"", 
-            description:"", 
-            dateDue:"",
-            status: false,
-        })
     }
 
 
     return (
         <>
+
+        <button onClick={() => navigate("/")}> Home</button>
+
+        
+
         <div className = "container mt-4"></div>
             <h2>Edit Task</h2>
-            <div class="alert alert-info">Task successfully created</div>
+            {/*<div class="alert alert-info">Task successfully created</div>*/}
         <form onSubmit={handleFormSubmission}>
 
 
@@ -92,8 +123,8 @@ export default function EditTaskForm(){
                     Task Name:
                     <input
                         type= "text"
-                        value = {task.name}
-                        onchange= {(e) => setTask({...task, name: e.target.value})}
+                        value = {name}
+                        onChange= {(e) => setName(e.target.value)}
                         style= {{ display: "block", width: "100%", padding: "8px" }}
                         required
                     />
@@ -106,8 +137,8 @@ export default function EditTaskForm(){
                     Description:
                     {/* use textarea for longer userinputs, supports scolling, for multiline use*/}
                     <textarea
-                        value = {task.description}
-                        onchange= {(e) => setTask({...task, description: e.target.value})}
+                        value = {description}
+                        onChange= {(e) => setDescription(e.target.value)}
                         style= {{ display: "block", width: "100%", padding: "8px" }}
                         required
                     />
@@ -121,8 +152,8 @@ export default function EditTaskForm(){
                     Due Date:
                     <input
                         type= "date"
-                        value = {task.dateDue}
-                        onchange= {(e) => setTask({...task, dateDue: e.target.value})}
+                        value = {dateDue}
+                        onChange= {(e) => setDateDue(e.target.value)}
                         style= {{ display: "block", width: "100%", padding: "8px" }}
                         required
                     />
@@ -135,10 +166,10 @@ export default function EditTaskForm(){
                     Task Completion Status:
                     <input
                         type= "checkbox"
-                        checked = {task.status}
-                        onchange= {(e) => setTask({...task, status: e.target.value})}
+                        checked = {status}
+                        onChange= {(e) => setStatus(e.target.checked)}
                         style= {{ marginLeft: "10px" }}
-                        required
+                        //required
                     />
                 </label>
             </div>
@@ -147,7 +178,7 @@ export default function EditTaskForm(){
             <button 
                 type="submit" 
                 style= {{ padding:"10px 20px", backgroundColor: "blue", color: "white", border: "none", cursor: "pointer", }}>
-                Submit task
+                Update task
             </button>
 
         </form>
