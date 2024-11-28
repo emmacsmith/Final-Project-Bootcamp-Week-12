@@ -88,7 +88,7 @@ export default function TaskPage(){
     return (
         <>
 
-        <button onClick={() => navigate("/")}> Home</button>
+        <button className="button is-dark" onClick={() => navigate("/")}> Home</button>
 
 
         <h2>Individual Task View</h2>
@@ -100,7 +100,7 @@ export default function TaskPage(){
         {/*Task Name Input*/}
         <div style= {{ marginBottom: "10px" }}>
                 <label>
-                    Task Name:
+                    <strong style={{ color: "black" }}>Task Name:</strong>
                     {/* <input
                         type= "text"
                         value = {task?.value.name}
@@ -117,7 +117,7 @@ export default function TaskPage(){
             {/*Task Description Input*/}
             <div style= {{ marginBottom: "10px" }}>
                 <label>
-                    Description:
+                <strong style={{ color: "black" }}>Description:</strong>
                     {/* use textarea for longer userinputs, supports scolling, for multiline use*/}
                     {/* <textarea
                         // value = {task.description}
@@ -133,7 +133,7 @@ export default function TaskPage(){
             {/*Task Due Date Input*/}
             <div style= {{ marginBottom: "10px" }}>
                 <label>
-                    Due Date:
+                <strong style={{ color: "black" }}>Due Date:</strong>
                     {/* <input
                         type= "date"
                         // value = {task.dateDue}
@@ -148,7 +148,7 @@ export default function TaskPage(){
             {/*Task status checkbox*/}
             <div style= {{ marginBottom: "10px" }}>
                 <label>
-                    Task Completion Status:
+                <strong style={{ color: "black" }}>Task Completion Status:</strong>
                     {/* <input
                         type= "checkbox"
                         // checked = {task.status}
@@ -169,10 +169,17 @@ export default function TaskPage(){
         {/* <button onClick={() => getOneTask( 1 )} className="FindTask">Find Task</button> */}
         
         {/*Delete individual task button*/}
-        <button onClick={() => deleteTask(id)} className="deleteTask" disabled={isDeleting}> {isDeleting ? "Deleting" : "Delete Task"}</button>
+        <div className="box" style={{ padding: "20px" }}>
+        <button onClick={() => deleteTask(id)} className="deleteTask button is-danger" disabled={isDeleting}  
+            style={{ border: "2px solid black", borderRadius: "5px", padding: "10px" }}
+            > 
+            {isDeleting ? "Deleting" : "Delete Task"}
+            </button>
         
         {/*Edit individual task button*/}
-        <button onClick={() => navigate("/task/" + id + "/edit")}>  Edit Task </button>
+        <button onClick={() => navigate("/task/" + id + "/edit")}
+             className="button is-primary" style={{ marginLeft: "10px" }} >  Edit Task </button>
+        </div>
     
 
         </>

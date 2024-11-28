@@ -107,7 +107,7 @@ export default function EditTaskForm(){
     return (
         <>
 
-        <button onClick={() => navigate("/")}> Home</button>
+        <button className="button is-dark" onClick={() => navigate("/")}> Home</button>
 
         
 

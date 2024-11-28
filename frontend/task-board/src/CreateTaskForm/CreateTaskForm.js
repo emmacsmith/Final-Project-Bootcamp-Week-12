@@ -80,7 +80,7 @@ export default function CreateTaskForm(){
     return (
         <>
 
-        <button onClick={() => navigate("/")}> Home</button>
+        <button className="button is-dark" onClick={() => navigate("/")}> Home</button>
 
         <div className = "container mt-4"></div>
             <h2>Create New Task</h2>

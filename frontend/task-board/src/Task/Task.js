@@ -34,7 +34,8 @@ export default function Task({id, name, description, dateDue, status}){
                 {/* <Link to= {"/task" + task.id}> 
                     <button className = "btn btn-primary"> <p>View Task</p></button>
                 </Link> */}
-                <button onClick={() => navigate ("/task/" + id)}> View Task </button>
+                <button onClick={() => navigate ("/task/" + id)} className="button is-primary is-outlined is-medium"> View Task </button>
+                
             </div>
         </div>
         </>

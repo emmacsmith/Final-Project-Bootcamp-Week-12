@@ -77,7 +77,24 @@ export default function HomePage(){
 
         {/*<button onClick={() => navigate("/")}> Home</button>*/}
 
-        <button onClick={() => navigate("/create-task")}> Create</button>
+        {/*<button className="button is-dark" onClick={() => navigate("/create-task")}> Create</button>*/}
+
+        <div className="box" style={{ padding: "20px" }}>
+            {/* Banner with title and button */}
+            <div className="level">
+                <div className="level-left">
+                    <h1 className="title">Team Ticket Board</h1>
+                </div>
+                <div className="level-right">
+                    <button 
+                        className="button is-dark" 
+                        onClick={() => navigate("/create-task")}
+                    >
+                        Create
+                    </button>
+                </div>
+            </div>
+        </div>
         
         {/* button to link to what page it needs to go to to allow creation of task*/}
 
